@@ -275,9 +275,32 @@ select {
     border: 0;
 }
 
+/* Disc flip animation */
+@keyframes flip-out {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+@keyframes flip-in {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+.disc.flip-out {
+    animation: flip-out 0.15s ease-in forwards;
+}
+
+.disc.flip-in {
+    animation: flip-in 0.15s ease-out forwards;
+}
+
 /* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
     .cell {
         transition: none;
+    }
+    .disc.flip-out,
+    .disc.flip-in {
+        animation: none;
     }
 }

@@ -129,7 +129,12 @@ const render = function () {
 
 // Event Handlers
 
+let isAnimating = false;
+
 const handleCellClick = function (event) {
+    if (isAnimating) {
+        return;
+    }
     const cell = event.target.closest(".cell");
     if (!cell || cell.disabled) {
         return;
@@ -141,8 +146,41 @@ const handleCellClick = function (event) {
     if (!Qalb.isValidMove(state, position)) {
         return;
     }
-    state = Qalb.makeMove(state, position);
-    render();
+
+    const flips = Qalb.flipsForMove(state, position);
+    isAnimating = true;
+
+    // Phase 1: collapse the discs that are about to flip
+    flips.forEach(function ({row, col}) {
+        const cellEl = boardEl.querySelector(
+            `[data-row="${row}"][data-col="${col}"]`
+        );
+        const disc = cellEl && cellEl.querySelector(".disc");
+        if (disc) {
+            disc.classList.add("flip-out");
+        }
+    });
+
+    setTimeout(function () {
+        // Phase 2: update state, re-render with new colours, then expand
+        state = Qalb.makeMove(state, position);
+        render();
+
+        flips.forEach(function ({row, col}) {
+            const cellEl = boardEl.querySelector(
+                `[data-row="${row}"][data-col="${col}"]`
+            );
+            const disc = cellEl && cellEl.querySelector(".disc");
+            if (disc) {
+                disc.classList.add("flip-in");
+            }
+        });
+
+
+        setTimeout(function () {
+            isAnimating = false;
+        }, 150);
+    }, 150);
 };
 
 const handlePass = function () {
