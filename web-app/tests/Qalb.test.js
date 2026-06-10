@@ -86,7 +86,7 @@ describe("Qalb", function () {
             assert.equal(Qalb.isValidMove(state, {row: 0, col: 0}), false);
         });
 
-        it("accepts a placement that sandwiches at least one disc", function () {
+        it("accepts a placement that sandwiches at least one disc", function (){
             const state = Qalb.newGame();
             assert.equal(Qalb.isValidMove(state, {row: 2, col: 3}), true);
         });
@@ -217,11 +217,13 @@ describe("Qalb", function () {
 
     describe("Game end", function () {
 
-        it("reports the game as not over from the starting position", function () {
+        it("reports the game as not over from the starting position", function()
+        {
             assert.equal(Qalb.isGameOver(Qalb.newGame()), false);
         });
 
-        it("reports the game as over when the board is fully one colour", function () {
+        it("reports the game as over when the board is fully one colour",
+            function(){
             const state = stateFromRows([
                 "BBBBBBBB",
                 "BBBBBBBB",
