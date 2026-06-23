@@ -15,50 +15,50 @@
 /* Light theme (default) */
 body, body.theme-light {
     --bg: #f0e3d6;
-    --fg: #1a1a1a;
-    --muted: #666;
     --board-bg: #2a6f4b;
+    --button-bg: #1a1a1a;
+    --button-fg: #fafafa;
     --cell-bg: #3a8c63;
     --cell-hover: #4ba078;
     --cell-legal: #6ec694;
     --disc-black: #111;
-    --disc-white: #fafafa;
     --disc-border: rgba(0, 0, 0, 0.35);
+    --disc-white: #fafafa;
+    --fg: #1a1a1a;
     --focus: #ffb300;
-    --button-bg: #1a1a1a;
-    --button-fg: #fafafa;
+    --muted: #666;
 }
 
 body.theme-dark {
     --bg: #15171c;
-    --fg: #e8e6e1;
-    --muted: #999;
     --board-bg: #1f3a2e;
+    --button-bg: #e8e6e1;
+    --button-fg: #15171c;
     --cell-bg: #2d5644;
     --cell-hover: #3d6e58;
     --cell-legal: #4f8970;
     --disc-black: #0a0a0a;
-    --disc-white: #f0f0f0;
     --disc-border: rgba(255, 255, 255, 0.25);
+    --disc-white: #f0f0f0;
+    --fg: #e8e6e1;
     --focus: #ffd54f;
-    --button-bg: #e8e6e1;
-    --button-fg: #15171c;
+    --muted: #999;
 }
 
 body.theme-high-contrast {
     --bg: #000;
-    --fg: #fff;
-    --muted: #ccc;
     --board-bg: #000;
+    --button-bg: #fff;
+    --button-fg: #000;
     --cell-bg: #222;
     --cell-hover: #444;
     --cell-legal: #555;
     --disc-black: #000;
-    --disc-white: #fff;
     --disc-border: #fff;
+    --disc-white: #fff;
+    --fg: #fff;
     --focus: #ff0;
-    --button-bg: #fff;
-    --button-fg: #000;
+    --muted: #ccc;
 }
 
 /* Base layout */
@@ -67,32 +67,32 @@ body.theme-high-contrast {
 }
 
 body {
-    margin: 0;
-    padding: 1.5rem;
+    align-items: center;
     background: var(--bg);
     color: var(--fg);
+    display: flex;
+    flex-direction: column;
     font-family: Georgia, "Times New Roman", serif;
     font-size: 16px;
     line-height: 1.5;
+    margin: 0;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding: 1.5rem;
 }
 
 header {
-    width: 100%;
-    max-width: 600px;
+    align-items: baseline;
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
     margin-bottom: 1.5rem;
+    max-width: 600px;
+    width: 100%;
 }
 
 h1 {
-    margin: 0;
     font-size: 1.75rem;
     letter-spacing: 0.02em;
+    margin: 0;
 }
 
 h2 {
@@ -101,18 +101,18 @@ h2 {
 }
 
 main {
-    width: 100%;
-    max-width: 600px;
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    max-width: 600px;
+    width: 100%;
 }
 
 /* Status panel */
 .status {
-    text-align: center;
     margin-bottom: 1rem;
     min-height: 3.5rem;
+    text-align: center;
 }
 
 .status p {
@@ -130,23 +130,23 @@ main {
 
 /* Board */
 .board {
-    display: grid;
-    grid-template-columns: repeat(8, var(--cell-size));
-    grid-template-rows: repeat(8, var(--cell-size));
-    gap: var(--gap);
-    padding: var(--gap);
     background: var(--board-bg);
     border-radius: 4px;
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: repeat(8, var(--cell-size));
+    grid-template-rows: repeat(8, var(--cell-size));
+    padding: var(--gap);
 }
 
 .cell {
+    align-items: center;
     background: var(--cell-bg);
     border: none;
-    padding: 0;
     cursor: pointer;
     display: flex;
-    align-items: center;
     justify-content: center;
+    padding: 0;
     position: relative;
     transition: background 0.15s ease;
 }
@@ -170,26 +170,26 @@ main {
 }
 
 .cell.legal::before {
-    content: "";
-    position: absolute;
-    inset: 30%;
     border: 2px dashed var(--fg);
     border-radius: 50%;
+    content: "";
+    inset: 30%;
     opacity: 0.5;
+    position: absolute;
 }
 
 /* Discs also use a glyph so colourblind users can distinguish them */
 .disc {
-    width: 78%;
-    height: 78%;
-    border-radius: 50%;
-    border: 1px solid var(--disc-border);
-    display: flex;
     align-items: center;
-    justify-content: center;
+    border: 1px solid var(--disc-border);
+    border-radius: 50%;
+    display: flex;
     font-size: calc(var(--cell-size) * 0.45);
+    height: 78%;
+    justify-content: center;
     line-height: 1;
     user-select: none;
+    width: 78%;
 }
 
 .disc.black {
@@ -217,19 +217,19 @@ body.theme-high-contrast .disc {
 
 /* Actions */
 .actions {
-    margin-top: 1.25rem;
     display: flex;
     gap: 0.75rem;
+    margin-top: 1.25rem;
 }
 
 button {
-    font: inherit;
     background: var(--button-bg);
-    color: var(--button-fg);
     border: 1px solid var(--fg);
-    padding: 0.5rem 1.25rem;
-    cursor: pointer;
     border-radius: 2px;
+    color: var(--button-fg);
+    cursor: pointer;
+    font: inherit;
+    padding: 0.5rem 1.25rem;
 }
 
 button:hover:not(:disabled) {
@@ -242,37 +242,37 @@ button:focus-visible {
 }
 
 button:disabled {
-    opacity: 0.4;
     cursor: default;
+    opacity: 0.4;
 }
 
 select {
-    font: inherit;
     background: var(--bg);
-    color: var(--fg);
     border: 1px solid var(--fg);
-    padding: 0.3rem 0.5rem;
     border-radius: 2px;
+    color: var(--fg);
+    font: inherit;
+    padding: 0.3rem 0.5rem;
 }
 
 /* Instructions */
 .instructions {
+    color: var(--muted);
+    font-size: 0.95rem;
     margin-top: 2rem;
     max-width: 500px;
-    font-size: 0.95rem;
-    color: var(--muted);
 }
 
 /* Accessibility utility */
 .visually-hidden {
-    position: absolute;
-    width: 1px;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
     height: 1px;
-    padding: 0;
     margin: -1px;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
+    padding: 0;
+    position: absolute;
+    width: 1px;
 }
 
 /* Disc flip animation */

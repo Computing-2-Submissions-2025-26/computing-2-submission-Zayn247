@@ -25,7 +25,7 @@ const boardFromRows = (rows) => rows.map(
 const stateFromRows = (rows, currentPlayer) => ({
     board: boardFromRows(rows),
     currentPlayer,
-    lastWasPass: falses
+    lastWasPass: false
 });
 
 
