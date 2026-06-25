@@ -169,22 +169,25 @@ describe("Qalb", function () {
         });
 
         it("rejects an illegal move with a thrown error", function () {
-            const state = Qalb.newGame();
-            assert.throws(
-                () => Qalb.makeMove(state, {row: 0, col: 0}),
-                /Illegal move/
-            );
-        });
-    });
+    const state = Qalb.newGame();
 
+    assert.throws(
+        function () {
+            Qalb.makeMove(state, {row: 0, col: 0});
+        },
+        new RegExp("Illegal move")
+    );
+});
     describe("Passing", function () {
 
         it("rejects a pass when legal moves exist", function () {
-            assert.throws(
-                () => Qalb.pass(Qalb.newGame()),
-                /Cannot pass/
-            );
-        });
+    assert.throws(
+        function () {
+            Qalb.pass(Qalb.newGame());
+        },
+        new RegExp("Cannot pass")
+    );
+});
 
         it("hands control to the opponent on a forced pass", function () {
             // Position where black has no legal moves but white
@@ -267,11 +270,15 @@ describe("Qalb", function () {
             assert.equal(Qalb.winner(half), null);
         });
 
-        it("refuses to declare a winner before the game is over", function () {
+                it("refuses to declare a winner before the game is over", function () {
             assert.throws(
-                () => Qalb.winner(Qalb.newGame()),
-                /not over/
+                function () {
+                    Qalb.winner(Qalb.newGame());
+                },
+                new RegExp("not over")
             );
         });
+
     });
+});
 });
