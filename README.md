@@ -2,6 +2,8 @@
 # Computing 2 Coursework Submission.
 **CID**: [02568632]
 
+AI was used to check for errors and help with linting issues.
+
 This is the submission template for your Computing 2 Applications coursework submission.
 
 ## Checklist

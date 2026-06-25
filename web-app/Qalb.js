@@ -61,17 +61,25 @@ const SIZE = 8;
  */
 const DIRECTIONS = [
     [-1, -1], [-1, 0], [-1, 1],
-    [0, -1],          [0, 1],
-    [1, -1],  [1, 0],  [1, 1]
+    [0, -1], [0, 1],
+    [1, -1], [1, 0], [1, 1]
 ];
 
-const opponent = (player) => (player === "B" ? "W" : "B");
+const opponent = function (player) {
+    return (
+        player === "B"
+        ? "W"
+        : "B"
+    );
+};
 
-const inBounds = function ({row, col}){
+const inBounds = function ({row, col}) {
     return row >= 0 && row < SIZE && col >= 0 && col < SIZE;
 };
-const cellAt = R.curry((board, {row, col}) => board[row][col]);
 
+const cellAt = R.curry(function (board, position) {
+    return board[position.row][position.col];
+});
 
 // Contrsuctors
 
@@ -162,15 +170,24 @@ const score = function (state) {
 const walkRay = function (board, player, start, [dRow, dCol]) {
     const step = function (pos, captured) {
         const next = {row: pos.row + dRow, col: pos.col + dCol};
-        if (!inBounds(next)){
-            return [];}
+
+        if (!inBounds(next)) {
+            return [];
+        }
+
         const here = cellAt(board, next);
-        if (here === null){
-            return [];}
-        if (here === player){
-            return captured;}
+
+        if (here === null) {
+            return [];
+        }
+
+        if (here === player) {
+            return captured;
+        }
+
         return step(next, [...captured, next]);
     };
+
     return step(start, []);
 };
 
@@ -183,12 +200,18 @@ const walkRay = function (board, player, start, [dRow, dCol]) {
  * @returns {Position[]}
  */
 const flipsForMove = function (state, position) {
-    if (!inBounds(position)){
-        return [];}
-    if (cellAt(state.board, position) !== null){
-        return [];}
+    if (!inBounds(position)) {
+        return [];
+    }
+
+    if (cellAt(state.board, position) !== null) {
+        return [];
+    }
+
     return R.chain(
-        (dir) => walkRay(state.board, state.currentPlayer, position, dir),
+        function (dir) {
+            return walkRay(state.board, state.currentPlayer, position, dir);
+        },
         DIRECTIONS
     );
 };
@@ -204,12 +227,19 @@ const flipsForMove = function (state, position) {
  *          must pass.
  */
 const validMoves = function (state) {
-    const positions = R.xprod(R.range(0, SIZE), R.range(0, SIZE))
-        .map(([row, col]) => ({row, col}));
-    return R.filter(
-        (pos) => flipsForMove(state, pos).length > 0,
-        positions
-    );
+    const positions = R.xprod(
+        R.range(0, SIZE),
+        R.range(0, SIZE)
+    ).map(function (pair) {
+        return {
+            row: pair[0],
+            col: pair[1]
+        };
+    });
+
+    return R.filter(function (pos) {
+        return flipsForMove(state, pos).length > 0;
+    }, positions);
 };
 
 /**
@@ -230,10 +260,19 @@ const isValidMove = function (state, position) {
  * @returns {boolean}
  */
 const isGameOver = function (state) {
-    if (validMoves(state).length > 0) return false;
-    const swapped = {...state, currentPlayer: opponent(state.currentPlayer)};
+    let swapped;
+
+    if (validMoves(state).length > 0) {
+        return false;
+    }
+
+    swapped = Object.assign({}, state, {
+        currentPlayer: opponent(state.currentPlayer)
+    });
+
     return validMoves(swapped).length === 0;
 };
+
 
 /**
  * The winner of a finished game.
@@ -247,12 +286,19 @@ const winner = function (state) {
     if (!isGameOver(state)) {
         throw new Error("Game is not over.");
     }
+
     const {B, W} = score(state);
-    if (B > W) return "B";
-    if (W > B) return "W";
+
+    if (B > W) {
+        return "B";
+    }
+
+    if (W > B) {
+        return "W";
+    }
+
     return null;
 };
-
 
 // Transitons
 
@@ -273,28 +319,40 @@ const winner = function (state) {
  */
 const makeMove = function (state, position) {
     const flips = flipsForMove(state, position);
+
     if (flips.length === 0) {
         throw new Error(
             `Illegal move at (${position.row}, ${position.col}).`
         );
     }
+
     const player = state.currentPlayer;
     const placements = [position, ...flips];
+
     const newBoard = R.reduce(
-        (board, {row, col}) => R.assocPath([row, col], player, board),
+        (board, cell) => R.assocPath(
+            [cell.row, cell.col],
+            player,
+            board
+        ),
         state.board,
         placements
     );
+
     const tentative = {
         board: newBoard,
         currentPlayer: opponent(player),
         lastWasPass: false
     };
+
     // If the opponent has no legal reply, the turn comes back to
     // the same player without a pass being recorded.
     if (validMoves(tentative).length === 0) {
-        return Object.freeze({...tentative, currentPlayer: player});
+        return Object.freeze(Object.assign({}, tentative, {
+            currentPlayer: player
+        }));
     }
+
     return Object.freeze(tentative);
 };
 
@@ -310,11 +368,13 @@ const pass = function (state) {
     if (validMoves(state).length > 0) {
         throw new Error("Cannot pass: current player has legal moves.");
     }
-    return Object.freeze({
-        ...state,
-        currentPlayer: opponent(state.currentPlayer),
-        lastWasPass: true
-    });
+
+    return Object.freeze(
+        Object.assign({}, state, {
+            currentPlayer: opponent(state.currentPlayer),
+            lastWasPass: true
+        })
+    );
 };
 
 
@@ -334,4 +394,4 @@ const Qalb = Object.freeze({
     pass
 });
 
-export default Qalb;
+export default Object.freeze(Qalb);

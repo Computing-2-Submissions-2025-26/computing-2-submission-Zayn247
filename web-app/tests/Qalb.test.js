@@ -65,10 +65,12 @@ describe("Qalb", function () {
                 {row: 2, col: 3}, {row: 3, col: 2},
                 {row: 4, col: 5}, {row: 5, col: 4}
             ];
-            expected.forEach((m) => {
+            expected.forEach(function (m) {
                 assert.ok(
-                    moves.some((x) => x.row === m.row && x.col === m.col),
-                    `Expected ${m.row},${m.col} to be legal`
+                    moves.some(function (x) {
+                        return x.row === m.row && x.col === m.col;
+                    }),
+                    "Expected " + m.row + "," + m.col + " to be legal"
                 );
             });
         });
